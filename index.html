@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKAZAKI WORKS ― ブラウザアプリまとめ</title>
+<meta name="description" content="or2x8が作った、ブラウザで遊べる自作アプリのまとめページです。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1B1F2A;
+    --ink-2: #262C3B;
+    --screen: #DCE8D2;
+    --screen-line: #C6D6BA;
+    --sky: #86D2E7;
+    --leaf: #5FC266;
+    --amber: #F49E00;
+    --paper: #FFFFFF;
+    --outline: #0A0A0A;
+    --paper-dim: #EFEDE5;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Zen Maru Gothic', sans-serif;
+  }
+
+  body {
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1.4px);
+    background-size: 14px 14px;
+  }
+
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 48px 20px 80px;
+  }
+
+  .dotgo {
+    font-family: 'DotGothic16', sans-serif;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- header / console top ---------- */
+  header.console {
+    position: relative;
+    border: 4px solid var(--outline);
+    border-radius: 22px;
+    background: var(--ink-2);
+    padding: 28px 28px 32px;
+    overflow: hidden;
+  }
+
+  .grille {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    display: grid;
+    grid-template-columns: repeat(6, 6px);
+    grid-auto-rows: 6px;
+    gap: 5px;
+    opacity: 0.5;
+  }
+  .grille span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--paper);
+  }
+
+  .power-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .power-led {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--leaf);
+    box-shadow: 0 0 0 2px rgba(95,194,102,0.25);
+    animation: blink 2.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .power-led { animation: none; }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  .power-label {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--screen);
+    opacity: 0.85;
+  }
+
+  .hero {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .mascot-hero { flex-shrink: 0; }
+
+  .hero-text h1 {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: clamp(28px, 5vw, 44px);
+    margin: 0 0 8px;
+    line-height: 1.3;
+    color: var(--paper);
+  }
+
+  .hero-text p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--screen);
+    opacity: 0.9;
+    max-width: 46ch;
+  }
+
+  /* ---------- section label ---------- */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 56px 0 20px;
+  }
+  .section-label .bar {
+    width: 10px;
+    height: 22px;
+    background: var(--amber);
+    border: 2px solid var(--outline);
+  }
+  .section-label span {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ---------- cards ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  .cart {
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border: 4px solid var(--outline);
+    transition: transform 0.15s ease;
+  }
+  .cart:hover { transform: translateY(-4px); }
+
+  .cart.c-sky   { background: var(--sky); }
+  .cart.c-leaf  { background: var(--leaf); }
+  .cart.c-amber { background: var(--amber); }
+
+  .screen {
+    position: relative;
+    border-radius: 12px;
+    border: 3px solid var(--outline);
+    background: var(--screen);
+    aspect-ratio: 1.91 / 1;
+    overflow: hidden;
+  }
+  .screen img, .screen .mascot-fill {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .mascot-fill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--screen);
+  }
+  .mascot-fill svg { width: 62%; height: auto; }
+
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(10,10,10,0.05) 0px,
+      rgba(10,10,10,0.05) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+
+  .cart-body {
+    padding: 16px 10px 10px;
+  }
+
+  .cart-title {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 18px;
+    color: var(--outline);
+    margin: 0 0 8px;
+  }
+
+  .cart-desc {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--outline);
+    margin: 0 0 16px;
+    min-height: 4.6em;
+  }
+
+  .play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--outline);
+    color: var(--paper);
+    border: none;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    text-decoration: none;
+  }
+  .play-btn:hover { opacity: 0.85; }
+  .play-btn:focus-visible {
+    outline: 3px solid var(--paper);
+    outline-offset: 2px;
+  }
+
+  /* ---------- footer / creator plaque ---------- */
+  .plaque {
+    margin-top: 64px;
+    border: 4px solid var(--outline);
+    border-radius: 18px;
+    background: var(--ink-2);
+    padding: 26px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .plaque-mascot { flex-shrink: 0; }
+  .plaque-mascot svg { width: 64px; height: auto; display: block; }
+
+  .plaque-info { flex: 1; min-width: 180px; }
+
+  .plaque-label {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--screen);
+    opacity: 0.75;
+    margin: 0 0 4px;
+  }
+
+  .plaque-name {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 22px;
+    margin: 0;
+    color: var(--paper);
+  }
+
+  .links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .link-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13.5px;
+    border: 2px solid var(--outline);
+  }
+  .link-pill.twitch { background: var(--leaf); color: var(--outline); }
+  .link-pill.x { background: var(--paper); color: var(--outline); }
+  .link-pill:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+
+  @media (max-width: 520px) {
+    .plaque { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="console">
+    <div class="grille">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="power-row">
+      <span class="power-led"></span>
+      <span class="power-label dotgo">POWER ON</span>
+    </div>
+    <div class="hero">
+      <div class="mascot-hero">
+        <svg width="96" height="96" viewBox="0 0 100 100" role="img" aria-label="OKサインをするロボット風マスコット">
+          <circle cx="50" cy="42" r="26" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="3.5"/>
+          <circle cx="41" cy="40" r="4.2" fill="#0A0A0A"/>
+          <circle cx="60" cy="40" r="4.2" fill="#0A0A0A"/>
+          <path d="M40 52 Q50 58 60 52" stroke="#0A0A0A" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="46" y="10" width="8" height="10" rx="2" fill="#86D2E7" stroke="#0A0A0A" stroke-width="3"/>
+          <circle cx="50" cy="8" r="4" fill="#F49E00" stroke="#0A0A0A" stroke-width="3"/>
+          <rect x="24" y="60" width="52" height="30" rx="10" fill="#5FC266" stroke="#0A0A0A" stroke-width="3.5"/>
+          <circle cx="20" cy="76" r="9" fill="#86D2E7" stroke="#0A0A0A" stroke-width="3"/>
+          <path d="M15 76 a5 5 0 1 0 10 0" fill="none" stroke="#0A0A0A" stroke-width="2.4"/>
+          <circle cx="80" cy="76" r="9" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="hero-text">
+        <h1 class="dotgo">OKAZAKI WORKS</h1>
+        <p>ブラウザですぐ遊べる、自作のミニアプリまとめです。好きなカートリッジを選んで遊んでね。</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="section-label">
+    <div class="bar"></div>
+    <span class="dotgo">GAME SELECT</span>
+  </div>
+
+  <div class="grid">
+
+    <article class="cart c-sky">
+      <div class="screen">
+        <img src="https://okazakiruton.github.io/sizesense/og-image.png" alt="だいたいこんぐらい ― サイズ感クイズ のスクリーンショット" loading="lazy">
+        <div class="scanlines"></div>
+      </div>
+      <div class="cart-body">
+        <h2 class="cart-title">だいたいこんぐらい</h2>
+        <p class="cart-desc">身の回りのもののサイズを感覚だけで当てるクイズゲーム。硬貨や乾電池の直径を、画面上で実際の大きさに操作して当てよう。</p>
+        <a class="play-btn" href="https://okazakiruton.github.io/sizesense/">▶ PLAY</a>
+      </div>
+    </article>
+
+    <article class="cart c-leaf">
+      <div class="screen">
+        <img src="fans-timer-ogp.png" alt="ずっちタイマー のスクリーンショット" loading="lazy">
+        <div class="scanlines"></div>
+      </div>
+      <div class="cart-body">
+        <h2 class="cart-title">ずっちタイマー</h2>
+        <p class="cart-desc">Twitch配信者向けの休憩タイマー。休憩中だけキャラが画面に現れて育ち、視聴者のコメントにも反応する。</p>
+        <a class="play-btn" href="https://okazakiruton.github.io/fans_timer/">▶ PLAY</a>
+      </div>
+    </article>
+
+    <article class="cart c-amber">
+      <div class="screen">
+        <img src="https://okazakiruton.github.io/kashiwoshindan/ogp-image.png" alt="カシヲ診断 のスクリーンショット" loading="lazy">
+        <div class="scanlines"></div>
+      </div>
+      <div class="cart-body">
+        <h2 class="cart-title">カシヲ診断</h2>
+        <p class="cart-desc">8つの質問から、今日のあなたにぴったりのカシヲさんの回を診断するミニ診断アプリ。</p>
+        <a class="play-btn" href="https://okazakiruton.github.io/kashiwoshindan/">▶ PLAY</a>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="plaque">
+    <div class="plaque-mascot">
+      <svg viewBox="0 0 100 100" role="img" aria-label="作成者マスコット">
+        <circle cx="50" cy="42" r="26" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="3.5"/>
+        <circle cx="41" cy="40" r="4.2" fill="#0A0A0A"/>
+        <circle cx="60" cy="40" r="4.2" fill="#0A0A0A"/>
+        <path d="M40 52 Q50 58 60 52" stroke="#0A0A0A" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <rect x="46" y="10" width="8" height="10" rx="2" fill="#86D2E7" stroke="#0A0A0A" stroke-width="3"/>
+        <circle cx="50" cy="8" r="4" fill="#F49E00" stroke="#0A0A0A" stroke-width="3"/>
+        <rect x="24" y="60" width="52" height="30" rx="10" fill="#5FC266" stroke="#0A0A0A" stroke-width="3.5"/>
+        <circle cx="20" cy="76" r="9" fill="#86D2E7" stroke="#0A0A0A" stroke-width="3"/>
+        <path d="M15 76 a5 5 0 1 0 10 0" fill="none" stroke="#0A0A0A" stroke-width="2.4"/>
+        <circle cx="80" cy="76" r="9" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="plaque-info">
+      <p class="plaque-label dotgo">MADE BY</p>
+      <p class="plaque-name">OKAZAKI RUTON</p>
+    </div>
+    <div class="links">
+      <a class="link-pill twitch" href="https://www.twitch.tv/or2x8" target="_blank" rel="noopener">Twitch: or2x8</a>
+      <a class="link-pill x" href="https://x.com/or2x8" target="_blank" rel="noopener">X: @or2x8</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
