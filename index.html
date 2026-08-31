@@ -248,6 +248,26 @@
     outline-offset: 2px;
   }
 
+  /* ---------- coming soon card ---------- */
+  .cart-soon {
+    background: transparent;
+    border: 4px dashed rgba(255,255,255,0.35);
+  }
+  .screen-soon {
+    background: var(--ink-2);
+    border: 3px dashed rgba(255,255,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .soon-label {
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.4);
+  }
+  .cart-title-soon { color: rgba(255,255,255,0.65); }
+  .cart-desc-soon { color: rgba(255,255,255,0.45); min-height: auto; }
+
   /* ---------- footer / creator plaque ---------- */
   .plaque {
     margin-top: 64px;
@@ -352,6 +372,29 @@
 
     <article class="cart c-leaf">
       <div class="screen">
+        <div class="mascot-fill">
+          <img src="ruton.gif" alt="ゆびすくみ vs CPU のイメージ" style="width: 40%; height: auto; image-rendering: pixelated;">
+        </div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="cart-body">
+        <h2 class="cart-title">ゆびすくみ</h2>
+        <p class="cart-desc">ルーレットで指定された指と色のキーをホールド。CPUと交互に指を置き合って、何連続成功できるか腕試し！</p>
+        <a class="play-btn" href="https://okazakiruton.github.io/yubisukumi/">▶ PLAY</a>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="section-label">
+    <div class="bar"></div>
+    <span class="dotgo">推し活</span>
+  </div>
+
+  <div class="grid">
+
+    <article class="cart c-amber">
+      <div class="screen">
         <img src="fans-timer-ogp.png" alt="ずっちタイマー のスクリーンショット" loading="lazy">
         <div class="scanlines"></div>
       </div>
@@ -362,7 +405,7 @@
       </div>
     </article>
 
-    <article class="cart c-amber">
+    <article class="cart c-sky">
       <div class="screen">
         <img src="https://okazakiruton.github.io/kashiwoshindan/ogp-image.png" alt="カシヲ診断 のスクリーンショット" loading="lazy">
         <div class="scanlines"></div>
@@ -371,6 +414,25 @@
         <h2 class="cart-title">カシヲ診断</h2>
         <p class="cart-desc">8つの質問から、今日のあなたにぴったりのカシヲさんの回を診断するミニ診断アプリ。</p>
         <a class="play-btn" href="https://okazakiruton.github.io/kashiwoshindan/">▶ PLAY</a>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="section-label">
+    <div class="bar"></div>
+    <span class="dotgo">collection</span>
+  </div>
+
+  <div class="grid">
+
+    <article class="cart cart-soon">
+      <div class="screen screen-soon">
+        <span class="dotgo soon-label">COMING SOON</span>
+      </div>
+      <div class="cart-body">
+        <h2 class="cart-title cart-title-soon">今後追加予定</h2>
+        <p class="cart-desc cart-desc-soon">新しいコレクションアイテムを準備中です。</p>
       </div>
     </article>
 
